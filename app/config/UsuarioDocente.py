@@ -1,27 +1,30 @@
 from .database import db, collection
 from bson import ObjectId
 from fastapi import HTTPException
+from ..models.user import User
 
 
-def get_all():
+def get_all() -> list[User]:
     client = db()
     coll = collection(client, "Registro", "UsuarioDocente")
     docs = coll.find()
-    # all_items = list(docs)
-    all_items = [{"_id": str(doc["_id"]), "name": doc.get("name")}
-                 for doc in docs]
+    all_items = []
+    for doc in docs:
+        doc["id"] = str(doc["_id"])
+        all_items.append(User(**doc))
+    # all_items = [User(**doc) for doc in docs]
     client.close()
     return all_items
 
 
-async def get_one_user(id: str):
+def get_one_user(id: str):
     try:
         client = db()
         coll = collection(client, "Registro", "UsuarioDocente")
-        usr = ObjectId(id)
-        crt = {"_id": usr}
+        crt = {"_id": ObjectId(id)}
         doc = coll.find_one(crt)
         if doc:
+            doc["_id"] = str(doc["_id"])
             return doc
         else:
             raise HTTPException(

@@ -1,3 +1,7 @@
-GET http://localhost:8000
+GET http://localhost:8000/
 
-GET http://localhost:8000/usuarios
+GET http://localhost:8000/usuario
+
+GET http://localhost:8000/usuario/65bd2260ba83440d674bee91
+
+GET http://localhost:8000/usuario/5
